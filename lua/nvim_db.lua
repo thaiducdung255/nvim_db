@@ -69,15 +69,18 @@ local function create_win(win_opts)
     }
   end
 
-  return {
-    buf = _buf,
-    win = api.nvim_open_win(buf, true, opts),
-  }
+  local _win = api.nvim_open_win(
+    _buf,
+    true,
+    opts
+  )
+
+  return _win, _buf
 end
 
 local function open_win(title)
-  local border_win = create_win({ title = title, is_border_win = true })
-  local main_win = create_win({ is_border_win = false })
+  local _, border_buf = create_win({ title = title, is_border_win = true })
+  win, _ = create_win({ is_border_win = false })
 end
 
 local function update_view(direction)
