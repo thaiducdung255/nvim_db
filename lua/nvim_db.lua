@@ -3,9 +3,10 @@ local buf, win
 local position = 0
 
 local TITLE = {
-  db = 'NVIM-DB',
-  schema = 'NVIM-SCHEMA',
-  conn = 'NVIM-CONNECTION',
+  db = ' DATABASES ',
+  tb = ' TABLES ',
+  schema = ' SCHEMAS ',
+  conn = ' CONNECTIONS ',
 }
 
 local function center(str)
@@ -60,7 +61,7 @@ local function open_window(title)
   local left_sep = math.floor(width / 2 - #title - 1)
   local right_sep = width - left_sep - 1
 
-  local border_lines = { '╭' .. string.rep('─ ', left_sep) .. title .. string.rep(' ─', right_sep) .. '╮' }
+  local border_lines = { '╭' .. string.rep('─', left_sep) .. title .. string.rep('─', right_sep) .. '╮' }
   local middle_line = '│' .. string.rep(' ', win_width) .. '│'
   local bottom_line = '╰' .. string.rep('─', win_width) .. '╯'
 
@@ -174,9 +175,9 @@ end
 local function nvim_db()
   position = 0
   open_window(TITLE.conn)
-  set_mappings()
-  update_view(0)
-  api.nvim_win_set_cursor(win, { 4, 0 })
+  -- set_mappings()
+  -- update_view(0)
+  -- api.nvim_win_set_cursor(win, { 4, 0 })
 end
 
 return {
