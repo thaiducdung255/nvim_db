@@ -2,13 +2,21 @@ local api = vim.api
 local buf, win
 local position = 0
 
+local TITLE = {
+  db = 'NVIM-DB',
+  schema = 'NVIM-SCHEMA',
+  conn = 'NVIM-CONNECTION',
+}
+
+local title = TITLE.conn
+
 local function center(str)
   local width = api.nvim_win_get_width(0)
   local shift = math.floor(width / 2) - math.floor(#str / 2)
   return string.rep(' ', shift) .. str
 end
 
-local function open_window()
+local function open_window(title)
   buf = api.nvim_create_buf(false, true)
   local border_buf = api.nvim_create_buf(false, true)
 
@@ -51,7 +59,10 @@ local function open_window()
   -- create the window
   win = api.nvim_open_win(buf, true, otps)
 
-  local border_lines = { '╭' .. string.rep('─', win_width) .. '╮' }
+  local left_sep = math.floor(width / 2 - #title - 1)
+  local right_sep = width - left_sep - 1
+
+  local border_lines = { '╭' .. string.rep('─ ', left_sep) .. title .. string.rep(' ─', right_sep) .. '╮' }
   local middle_line = '│' .. string.rep(' ', win_width) .. '│'
   local bottom_line = '╰' .. string.rep('─', win_width) .. '╯'
 
@@ -105,7 +116,6 @@ end
 
 local function close_window()
   api.nvim_win_close(win, true)
-  api.nvim_win_close(buf, true)
 end
 
 local function open_file()
