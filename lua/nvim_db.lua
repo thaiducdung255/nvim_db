@@ -176,9 +176,9 @@ end
 local function nvim_db()
   position = 0
   open_window(TITLE.conn)
-  -- set_mappings()
-  -- update_view(0)
-  -- api.nvim_win_set_cursor(win, { 4, 0 })
+  set_mappings()
+  update_view(0)
+  api.nvim_win_set_cursor(win, { 4, 0 })
 end
 
 return {
