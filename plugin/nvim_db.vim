@@ -6,7 +6,7 @@ set cpo&vim
 hi def link DBUIHeader     Number
 hi def link DBUISubHeader  Identifier
 
-command! Dbui lua require'nvim_db'.nvim_db()
+command! NvimDB lua require'nvim_db'.nvim_db()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
