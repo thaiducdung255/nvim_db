@@ -60,10 +60,11 @@ local function open_window(title)
 
   local left_sep = math.floor(width / 2 - #title - 1)
   local right_sep = width - left_sep - 1
+  print(width, left_sep, right_sep, #title)
 
-  local border_lines = { '╭' .. string.rep('─', left_sep) .. title .. string.rep('─', right_sep) .. '╮' }
-  local middle_line = '│' .. string.rep(' ', win_width) .. '│'
-  local bottom_line = '╰' .. string.rep('─', win_width) .. '╯'
+  local border_lines = { '╔' .. string.rep('═', left_sep) .. title .. string.rep('═', right_sep) .. '╗' }
+  local middle_line = '║' .. string.rep(' ', win_width) .. '║'
+  local bottom_line = '╚' .. string.rep('═', win_width) .. '╝'
 
   for i = 1, win_height do
     table.insert(border_lines, middle_line)
@@ -75,7 +76,7 @@ local function open_window(title)
 
   local border_win = api.nvim_open_win(border_buf, true, border_otps)
   win = api.nvim_open_win(buf, true, otps)
-  api.nvim_command('au Bufwipeout <buffer> exe "silent bwipeout!"')
+  api.nvim_command('au Bufwipeout <buffer> exe "silent bwipeout!"' .. border_buf)
 
   api.nvim_win_set_option(win, "cursorline", true) -- it highlights the current line
 
