@@ -15,14 +15,8 @@ local function center(str)
   return string.rep(' ', shift) .. str
 end
 
-local function open_window(title)
-  buf = api.nvim_create_buf(false, true)
-  local border_buf = api.nvim_create_buf(false, true)
-
-  api.nvim_buf_set_name(buf, "nvim-db")
-  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  api.nvim_buf_set_option(buf, "filetype", "nvim-db")
-
+local function create_win(win_opts)
+  local _buf = api.nvim_create_buf(false, true)
 
   -- get dimenstions of the window
   local width = api.nvim_get_option("columns")
@@ -36,60 +30,54 @@ local function open_window(title)
   local row = math.ceil((height - win_height) / 2 - 1)
   local col = math.ceil((width - win_width) / 2)
 
-  -- set some opts
-  local border_otps = {
-    style = "minimal",
-    relative = "editor",
-    row = row - 1,
-    col = col - 1,
-    width = win_width + 2,
-    height = win_height + 2,
-  }
+  local opts = nil
 
-  local otps = {
-    style = "minimal",
-    relative = "editor",
-    row = row,
-    col = col,
-    width = win_width,
-    height = win_height,
-  }
+  if win_otps.is_border_win then
+    opts = {
+      style = "minimal",
+      relative = "editor",
+      row = row - 1,
+      col = col - 1,
+      width = win_width + 2,
+      height = win_height + 2,
+    }
 
-  -- create the window
-  win = api.nvim_open_win(buf, true, otps)
+    -- draw border
+    local left_sep = math.floor((width - #win_otps.title) / 2)
+    local right_sep = math.ceil((width - #win_otps.title) / 2)
+    print(width, left_sep, right_sep, #win_otps.title)
 
-  local left_sep = math.floor(width / 2 - #title - 1)
-  local right_sep = width - left_sep - #title - 1
-  print(width, left_sep, right_sep, #title)
+    local border_lines = { '╔' .. string.rep('═', left_sep) .. win_otps.title .. string.rep('═', right_sep) .. '╗' }
+    local middle_line = '║' .. string.rep(' ', win_width) .. '║'
+    local bottom_line = '╚' .. string.rep('═', win_width) .. '╝'
 
-  local border_lines = { '╔' .. string.rep('═', left_sep) .. title .. string.rep('═', right_sep) .. '╗' }
-  local middle_line = '║' .. string.rep(' ', win_width) .. '║'
-  local bottom_line = '╚' .. string.rep('═', win_width) .. '╝'
+    for i = 1, win_height do
+      table.insert(border_lines, middle_line)
+    end
 
-  for i = 1, win_height do
-    table.insert(border_lines, middle_line)
+    table.insert(border_lines, bottom_line)
+    api.nvim_buf_set_lines(_buf, 0, -1, false, border_lines)
+    api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout!"' .. _buf)
+  else
+    opts = {
+      style = "minimal",
+      relative = "editor",
+      row = row,
+      col = col,
+      width = win_width,
+      height = win_height,
+    }
   end
 
-  table.insert(border_lines, bottom_line)
+  return {
+    buf = _buf,
+    win = api.nvim_open_win(buf, true, opts),
+  }
+end
 
-  api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
-
-  local border_win = api.nvim_open_win(border_buf, true, border_otps)
-  win = api.nvim_open_win(buf, true, otps)
-  api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout!"' .. border_buf)
-
-  api.nvim_win_set_option(win, "cursorline", true) -- it highlights the current line
-
-  -- we can add title already here, because first line will never change
-  api.nvim_buf_set_lines(
-    buf,
-    0,
-    -1,
-    false,
-    { center('what have i done'), '', '' }
-  )
-
-  api.nvim_buf_add_highlight(buf, -1, "DBUIHeader", 0, 0, -1)
+local function open_win(title)
+  local border_win = create_win(true)
+  local main_win = create_win(false)
 end
 
 local function update_view(direction)
@@ -175,10 +163,10 @@ end
 
 local function nvim_db()
   position = 0
-  open_window(TITLE.conn)
+  open_win(TITLE.conn)
   set_mappings()
-  update_view(0)
-  api.nvim_win_set_cursor(win, { 4, 0 })
+  -- update_view(0)
+  -- api.nvim_win_set_cursor(win, { 4, 0 })
 end
 
 return {
