@@ -32,7 +32,7 @@ local function create_win(win_opts)
 
   local opts = nil
 
-  if win_otps.is_border_win then
+  if win_opts.is_border_win then
     opts = {
       style = "minimal",
       relative = "editor",
@@ -43,11 +43,11 @@ local function create_win(win_opts)
     }
 
     -- draw border
-    local left_sep = math.floor((width - #win_otps.title) / 2)
-    local right_sep = math.ceil((width - #win_otps.title) / 2)
-    print(width, left_sep, right_sep, #win_otps.title)
+    local left_sep = math.floor((width - #win_opts.title) / 2)
+    local right_sep = math.ceil((width - #win_opts.title) / 2)
+    print(width, left_sep, right_sep, #win_opts.title)
 
-    local border_lines = { '╔' .. string.rep('═', left_sep) .. win_otps.title .. string.rep('═', right_sep) .. '╗' }
+    local border_lines = { '╔' .. string.rep('═', left_sep) .. win_opts.title .. string.rep('═', right_sep) .. '╗' }
     local middle_line = '║' .. string.rep(' ', win_width) .. '║'
     local bottom_line = '╚' .. string.rep('═', win_width) .. '╝'
 
