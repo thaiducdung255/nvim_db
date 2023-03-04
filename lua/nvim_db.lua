@@ -8,8 +8,6 @@ local TITLE = {
   conn = 'NVIM-CONNECTION',
 }
 
-local title = TITLE.conn
-
 local function center(str)
   local width = api.nvim_win_get_width(0)
   local shift = math.floor(width / 2) - math.floor(#str / 2)
@@ -175,7 +173,7 @@ end
 
 local function nvim_db()
   position = 0
-  open_window()
+  open_window(TITLE.conn)
   set_mappings()
   update_view(0)
   api.nvim_win_set_cursor(win, { 4, 0 })
