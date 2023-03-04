@@ -79,8 +79,8 @@ local function create_win(win_opts)
 end
 
 local function open_win(title)
-  local _, border_buf = create_win({ title = title, is_border_win = true })
-  win, _ = create_win({ is_border_win = false })
+  local _, _ = create_win({ title = title, is_border_win = true })
+  win, buf = create_win({ is_border_win = false })
 end
 
 local function update_view(direction)
