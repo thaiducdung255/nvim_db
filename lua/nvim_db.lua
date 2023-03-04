@@ -59,7 +59,7 @@ local function open_window(title)
   win = api.nvim_open_win(buf, true, otps)
 
   local left_sep = math.floor(width / 2 - #title - 1)
-  local right_sep = width - left_sep - 1
+  local right_sep = width - left_sep - #title - 1
   print(width, left_sep, right_sep, #title)
 
   local border_lines = { '╔' .. string.rep('═', left_sep) .. title .. string.rep('═', right_sep) .. '╗' }
