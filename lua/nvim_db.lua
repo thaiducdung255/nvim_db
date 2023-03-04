@@ -43,15 +43,15 @@ local function create_win(win_opts)
     }
 
     -- draw border
-    local left_sep = math.floor((width - #win_opts.title) / 2)
-    local right_sep = math.ceil((width - #win_opts.title) / 2)
-    print(width, left_sep, right_sep, #win_opts.title)
+    local left_sep = math.floor((win_width - #win_opts.title) / 2)
+    local right_sep = math.ceil((win_width - #win_opts.title) / 2)
+    print(win_width, left_sep, right_sep, #win_opts.title, left_sep + right_sep + #win_opts.title)
 
     local border_lines = { '╔' .. string.rep('═', left_sep) .. win_opts.title .. string.rep('═', right_sep) .. '╗' }
     local middle_line = '║' .. string.rep(' ', win_width) .. '║'
     local bottom_line = '╚' .. string.rep('═', win_width) .. '╝'
 
-    for i = 1, win_height do
+    for _ = 1, win_height do
       table.insert(border_lines, middle_line)
     end
 
@@ -94,7 +94,7 @@ local function update_view(direction)
     table.insert(result, '')
   end
 
-  for k, v in pairs(result) do
+  for k, _ in pairs(result) do
     result[k] = ' ' .. result[k]
   end
 
@@ -145,7 +145,7 @@ local function set_mappings()
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'k', 'h', 'l'
   }
 
-  for k, v in ipairs(other_chars) do
+  for _, v in ipairs(other_chars) do
     api.nvim_buf_set_keymap(
       buf,
       'n',
