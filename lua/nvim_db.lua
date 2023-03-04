@@ -134,7 +134,7 @@ local function set_mappings()
       buf,
       'n',
       k,
-      ':lua require"nvim-db".' .. v .. '<CR>',
+      ':lua require"nvim_db".' .. v .. '<CR>',
       keymap_opts
     )
   end
