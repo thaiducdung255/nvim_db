@@ -105,6 +105,7 @@ end
 
 local function close_window()
   api.nvim_win_close(win, true)
+  api.nvim_win_close(buf, true)
 end
 
 local function open_file()
