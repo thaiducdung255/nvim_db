@@ -76,7 +76,7 @@ local function open_window(title)
 
   local border_win = api.nvim_open_win(border_buf, true, border_otps)
   win = api.nvim_open_win(buf, true, otps)
-  api.nvim_command('au Bufwipeout <buffer> exe "silent bwipeout!"' .. border_buf)
+  api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout!"' .. border_buf)
 
   api.nvim_win_set_option(win, "cursorline", true) -- it highlights the current line
 
