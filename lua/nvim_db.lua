@@ -88,6 +88,7 @@ end
 local function show_connections(direction)
   print('show connections')
   local file = io.open(FILE_PATH, "rb")
+  print('file', file, FILE_PATH)
 
   if not file then
     os.execute('touch ' .. FILE_PATH)
