@@ -145,7 +145,7 @@ local function set_mappings()
     -- ['N'] = 'update_view(-1)',
     -- ['E'] = 'update_view(1)',
     ['<CR>'] = 'open_file()',
-    ['q'] = 'close_window()',
+    ['<ESC>'] = 'close_window()',
     ['i'] = 'move_cursor()',
   }
 
@@ -188,7 +188,7 @@ local function nvim_db()
   position = 0
   open_win(TITLE.conn)
   set_mappings()
-  -- show_connections(0)
+  show_connections(0)
   -- api.nvim_win_set_cursor(win, { 4, 0 })
 end
 
