@@ -87,7 +87,8 @@ end
 
 local function show_connections(direction)
   print('show connections')
-  local file = io.open(FILE_PATH, "rb")
+  -- local file = io.open(FILE_PATH, "rb")
+  local file = os.execute('cat ' .. FILE_PATH)
   print('file', file, FILE_PATH)
 
   if not file then
