@@ -87,6 +87,7 @@ end
 
 local function show_connections(direction)
   local file = io.open(FILE_PATH, "rb")
+
   if not file then
     os.execute('mkdir -p ' .. FILE_PATH)
   else
@@ -99,6 +100,7 @@ local function show_connections(direction)
       connections[#connections + 1] = connection_str
     end
 
+    api.nvim_buf_set_lines(buf, 1, 2, false, { center('Select connections') })
     api.nvim_buf_set_lines(buf, 3, -1, false, connections)
     api.nvim_buf_set_option(buf, "modifiable", false)
   end
@@ -140,8 +142,8 @@ end
 
 local function set_mappings()
   local mappings = {
-    ['N'] = 'update_view(-1)',
-    ['E'] = 'update_view(1)',
+    -- ['N'] = 'update_view(-1)',
+    -- ['E'] = 'update_view(1)',
     ['<CR>'] = 'open_file()',
     ['q'] = 'close_window()',
     ['i'] = 'move_cursor()',
