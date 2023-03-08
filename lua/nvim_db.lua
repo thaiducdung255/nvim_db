@@ -98,6 +98,7 @@ local function show_connections(direction)
 
     for connection_str in file:lines() do
       connections[#connections + 1] = connection_str
+      print(connection_str)
     end
 
     file:close()
