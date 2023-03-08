@@ -1,5 +1,3 @@
-require 'paths'
-
 local api = vim.api
 local buf, win
 local position = 0
