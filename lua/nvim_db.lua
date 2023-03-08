@@ -100,6 +100,8 @@ local function show_connections(direction)
       connections[#connections + 1] = connection_str
     end
 
+    file:close()
+
     api.nvim_buf_set_lines(buf, 1, 2, false, { center('Select connections') })
     api.nvim_buf_set_lines(buf, 3, -1, false, connections)
     api.nvim_buf_set_option(buf, "modifiable", false)
