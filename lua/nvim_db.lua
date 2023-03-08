@@ -1,3 +1,5 @@
+require 'paths'
+
 local api = vim.api
 local buf, win
 local position = 0
@@ -8,6 +10,8 @@ local TITLE = {
   schema = ' SCHEMAS ',
   conn = ' CONNECTIONS ',
 }
+
+local FILE_PATH = '~/_nvim.db'
 
 local function center(str)
   local width = api.nvim_win_get_width(0)
@@ -83,26 +87,42 @@ local function open_win(title)
   win, buf = create_win({ is_border_win = false })
 end
 
-local function update_view(direction)
-  api.nvim_buf_set_option(buf, "modifiable", true)
-  position = position + direction
-  if position < 0 then position = 0 end
+local function show_connections(direction)
+  local file = io.open(FILE_PATH, "rb")
+  if not file then
+    os.execute('mkdir -p ' .. FILE_PATH)
+  else
+    local connections = {}
+    api.nvim_buf_set_option(buf, "modifiable", true)
+    position = position + direction
+    if position < 0 then position = 0 end
 
-  local result = vim.fn.systemlist('git diff-tree --no-commit-id --name-only -r HEAD~' .. position)
+    for connection_str in file:lines() do
+      connections[#connections + 1] = connection_str
+    end
 
-  if #result == 0 then
-    table.insert(result, '')
+    api.nvim_buf_set_lines(buf, 3, -1, false, connections)
+    api.nvim_buf_set_option(buf, "modifiable", false)
   end
-
-  for k, _ in pairs(result) do
-    result[k] = ' ' .. result[k]
-  end
-
-  api.nvim_buf_set_lines(buf, 1, 2, false, { center('HEAD-' .. position) })
-  api.nvim_buf_set_lines(buf, 3, -1, false, result)
-
-  api.nvim_buf_add_highlight(buf, -1, "DBUIHeader", 1, 0, -1)
-  api.nvim_buf_set_option(buf, "modifiable", false)
+  -- api.nvim_buf_set_option(buf, "modifiable", true)
+  -- position = position + direction
+  -- if position < 0 then position = 0 end
+  --
+  -- local result = vim.fn.systemlist('git diff-tree --no-commit-id --name-only -r HEAD~' .. position)
+  --
+  -- if #result == 0 then
+  --   table.insert(result, '')
+  -- end
+  --
+  -- for k, _ in pairs(result) do
+  --   result[k] = ' ' .. result[k]
+  -- end
+  --
+  -- api.nvim_buf_set_lines(buf, 1, 2, false, { center('HEAD-' .. position) })
+  -- api.nvim_buf_set_lines(buf, 3, -1, false, result)
+  --
+  -- api.nvim_buf_add_highlight(buf, -1, "DBUIHeader", 1, 0, -1)
+  -- api.nvim_buf_set_option(buf, "modifiable", false)
 end
 
 local function close_window()
@@ -168,13 +188,13 @@ local function nvim_db()
   position = 0
   open_win(TITLE.conn)
   set_mappings()
-  -- update_view(0)
+  show_connections(0)
   -- api.nvim_win_set_cursor(win, { 4, 0 })
 end
 
 return {
   nvim_db = nvim_db,
-  update_view = update_view,
+  update_view = show_connections,
   open_file = open_file,
   close_window = close_window,
   move_cursor = move_cursor,
