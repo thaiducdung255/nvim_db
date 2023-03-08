@@ -89,7 +89,7 @@ local function show_connections(direction)
   local file = io.open(FILE_PATH, "rb")
 
   if not file then
-    os.execute('mkdir -p ' .. FILE_PATH)
+    os.execute('touch ' .. FILE_PATH)
   else
     local connections = {}
     api.nvim_buf_set_option(buf, "modifiable", true)
