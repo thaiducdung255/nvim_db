@@ -86,11 +86,13 @@ local function open_win(title)
 end
 
 local function show_connections(direction)
+  print('show connections')
   local file = io.open(FILE_PATH, "rb")
 
   if not file then
     os.execute('touch ' .. FILE_PATH)
   else
+    print('readfile')
     local connections = {}
     api.nvim_buf_set_option(buf, "modifiable", true)
     position = position + direction
@@ -98,7 +100,7 @@ local function show_connections(direction)
 
     for connection_str in file:lines() do
       connections[#connections + 1] = connection_str
-      print(connection_str)
+      print('conneciton', connection_str)
     end
 
     file:close()
@@ -147,7 +149,7 @@ local function set_mappings()
   local mappings = {
     -- ['N'] = 'update_view(-1)',
     -- ['E'] = 'update_view(1)',
-    ['<CR>'] = 'open_file()',
+    -- ['<CR>'] = 'open_file()',
     ['<ESC>'] = 'close_window()',
     ['i'] = 'move_cursor()',
   }
