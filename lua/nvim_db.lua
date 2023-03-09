@@ -58,6 +58,7 @@ local function create_win(win_opts)
 
     table.insert(border_lines, bottom_line)
     api.nvim_buf_set_lines(_buf, 0, -1, false, border_lines)
+    print("border buf die", _buf)
     api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "' .. _buf)
   else
     opts = {
