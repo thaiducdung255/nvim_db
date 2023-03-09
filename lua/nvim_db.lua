@@ -58,7 +58,7 @@ local function create_win(win_opts)
 
     table.insert(border_lines, bottom_line)
     api.nvim_buf_set_lines(_buf, 0, -1, false, border_lines)
-    api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout!"' .. _buf)
+    api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "' .. _buf)
   else
     opts = {
       style = 'minimal',
@@ -132,7 +132,7 @@ local function show_connections(direction)
   end
 
 
-  api.nvim_buf_set_lines(buf, 1, 2, false, { center('Select connections') })
+  api.nvim_buf_set_lines(buf, 1, 2, false, { center('Choose a connection') })
   api.nvim_buf_set_lines(buf, 3, -1, false, connections)
   api.nvim_buf_set_option(buf, 'modifiable', false)
   -- api.nvim_buf_set_option(buf, 'modifiable', true)
