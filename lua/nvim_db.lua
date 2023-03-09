@@ -9,7 +9,7 @@ local TITLE = {
   conn = ' CONNECTIONS ',
 }
 
-local FILE_PATH = '~/_nvim.db'
+local FILE_PATH = os.getenv('HOME') .. '/_nvim.db'
 
 local function center(str)
   local width = api.nvim_win_get_width(0)
@@ -21,8 +21,8 @@ local function create_win(win_opts)
   local _buf = api.nvim_create_buf(false, true)
 
   -- get dimenstions of the window
-  local width = api.nvim_get_option("columns")
-  local height = api.nvim_get_option("lines")
+  local width = api.nvim_get_option('columns')
+  local height = api.nvim_get_option('lines')
 
   -- calculate our floating window sizes
   local win_height = math.ceil(height * 0.8 - 4)
@@ -36,8 +36,8 @@ local function create_win(win_opts)
 
   if win_opts.is_border_win then
     opts = {
-      style = "minimal",
-      relative = "editor",
+      style = 'minimal',
+      relative = 'editor',
       row = row - 1,
       col = col - 1,
       width = win_width + 2,
@@ -62,8 +62,8 @@ local function create_win(win_opts)
     api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout!"' .. _buf)
   else
     opts = {
-      style = "minimal",
-      relative = "editor",
+      style = 'minimal',
+      relative = 'editor',
       row = row,
       col = col,
       width = win_width,
@@ -87,31 +87,59 @@ end
 
 local function show_connections(direction)
   print('show connections')
-  -- local file = io.open(FILE_PATH, "rb")
-  local file = os.execute('cat ' .. FILE_PATH)
+  local file = io.open(FILE_PATH, 'rb')
   print('file', file, FILE_PATH)
 
   if not file then
-    os.execute('touch ' .. FILE_PATH)
-  else
-    print('readfile')
-    local connections = {}
-    api.nvim_buf_set_option(buf, "modifiable", true)
-    position = position + direction
-    if position < 0 then position = 0 end
+    return os.execute('touch ' .. FILE_PATH)
+  end
 
-    for connection_str in file:lines() do
-      connections[#connections + 1] = connection_str
-      print('conneciton', connection_str)
+  local connection_objs = {}
+
+  for index = 0, 1, 1 do
+    local raw_connection = file:read('a'):gsub('\n', '')
+
+    if #raw_connection < 10 then
+      break
     end
 
-    file:close()
+    local params = {}
 
-    api.nvim_buf_set_lines(buf, 1, 2, false, { center('Select connections') })
-    api.nvim_buf_set_lines(buf, 3, -1, false, connections)
-    api.nvim_buf_set_option(buf, "modifiable", false)
+    local idx = 0
+
+    for value in string.gmatch(raw_connection, '([^/]+)') do
+      params[idx] = value
+      idx = idx + 1
+    end
+
+    connection_objs[index] = {
+      type = params[0],
+      host = params[1],
+      port = tonumber(params[2]),
+      user = params[3],
+      password = params[4],
+      database = params[5],
+    }
   end
-  -- api.nvim_buf_set_option(buf, "modifiable", true)
+
+  file:close()
+
+  print('readfile')
+  local connections = {}
+  api.nvim_buf_set_option(buf, 'modifiable', true)
+  position = position + direction
+  if position < 0 then position = 0 end
+
+  for _, connection_obj in pairs(connection_objs) do
+    connections[#connections + 1] = connection_obj.type
+    print(connection_obj.type)
+  end
+
+
+  api.nvim_buf_set_lines(buf, 1, 2, false, { center('Select connections') })
+  api.nvim_buf_set_lines(buf, 3, -1, false, connections)
+  api.nvim_buf_set_option(buf, 'modifiable', false)
+  -- api.nvim_buf_set_option(buf, 'modifiable', true)
   -- position = position + direction
   -- if position < 0 then position = 0 end
   --
@@ -128,8 +156,8 @@ local function show_connections(direction)
   -- api.nvim_buf_set_lines(buf, 1, 2, false, { center('HEAD-' .. position) })
   -- api.nvim_buf_set_lines(buf, 3, -1, false, result)
   --
-  -- api.nvim_buf_add_highlight(buf, -1, "DBUIHeader", 1, 0, -1)
-  -- api.nvim_buf_set_option(buf, "modifiable", false)
+  -- api.nvim_buf_add_highlight(buf, -1, 'DBUIHeader', 1, 0, -1)
+  -- api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
 local function close_window()
