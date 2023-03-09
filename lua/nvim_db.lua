@@ -47,7 +47,6 @@ local function create_win(win_opts)
     -- draw border
     local left_sep = math.floor((win_width - #win_opts.title) / 2)
     local right_sep = math.ceil((win_width - #win_opts.title) / 2)
-    print(win_width, left_sep, right_sep, #win_opts.title, left_sep + right_sep + #win_opts.title)
 
     local border_lines = { '╔' .. string.rep('═', left_sep) .. win_opts.title .. string.rep('═', right_sep) .. '╗' }
     local middle_line = '║' .. string.rep(' ', win_width) .. '║'
@@ -86,9 +85,7 @@ local function open_win(title)
 end
 
 local function show_connections(direction)
-  print('show connections')
   local file = io.open(FILE_PATH, 'rb')
-  print('file', file, FILE_PATH)
 
   if not file then
     return os.execute('touch ' .. FILE_PATH)
@@ -124,15 +121,14 @@ local function show_connections(direction)
 
   file:close()
 
-  print('readfile')
   local connections = {}
   api.nvim_buf_set_option(buf, 'modifiable', true)
   position = position + direction
   if position < 0 then position = 0 end
 
   for _, connection_obj in pairs(connection_objs) do
-    connections[#connections + 1] = connection_obj.type
-    print(connection_obj.type)
+    connections[#connections + 1] = connection_obj.type ..
+        ": " .. connection_obj.host .. ":" .. connection_obj.port .. "/" .. connection_obj.database
   end
 
 
@@ -177,8 +173,8 @@ end
 
 local function set_mappings()
   local mappings = {
-    -- ['N'] = 'update_view(-1)',
-    -- ['E'] = 'update_view(1)',
+    -- ['n'] = 'update_view(-1)',
+    -- ['e'] = 'update_view(1)',
     -- ['<CR>'] = 'open_file()',
     ['<ESC>'] = 'close_window()',
     ['i'] = 'move_cursor()',
